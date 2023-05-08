@@ -2,12 +2,12 @@ package com.neu.chatApp.client.gui;
 
 import com.google.gson.Gson;
 
-import java.awt.*;
-import javax.swing.*;
-
 import com.neu.chatApp.client.data.ClientData;
 import com.neu.chatApp.client.rest.RestClient;
 import com.neu.chatApp.entity.Message;
+
+import java.awt.*;
+import javax.swing.*;
 
 public class GUIMain {
   private static String username;
@@ -44,8 +44,6 @@ public class GUIMain {
         login.passwordField.setText(null);
         return;
       }
-      login.usernameField.setText(null);
-      login.passwordField.setText(null);
       String response = restClient.signUp(username, password);
       if (response != null) {
         JOptionPane.showMessageDialog(login.signup, "you have successfully signed up, click the login button to continue.");

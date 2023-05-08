@@ -3,7 +3,7 @@ package com.neu.chatApp.server.service;
 import com.neu.chatApp.server.db.DB;
 import com.neu.chatApp.server.db.MemoryDB;
 import com.neu.chatApp.entity.User;
-import logger.SimpleLogger;
+import com.neu.chatApp.logger.SimpleLogger;
 
 import com.neu.chatApp.entity.Message;
 import org.springframework.http.ResponseEntity;

@@ -52,8 +52,9 @@ Please see the JavaDoc in the folder.
 
 ## How to Run
 
-To get started with this project, first make sure you have the following software installed:  
+You can use provided jars and simply run server first, and then client.
 
-Java 8 or later
-Apache Maven
-
+```
+java -jar server.jar
+java -jar client.jar
+```

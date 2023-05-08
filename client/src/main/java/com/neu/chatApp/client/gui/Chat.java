@@ -1,11 +1,11 @@
 package com.neu.chatApp.client.gui;
 
+import com.neu.chatApp.api.RMIServer;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.*;
-
-import api.RMIServer;
 
 public class Chat {
   JPanel panelMain;

@@ -1,12 +1,12 @@
 package com.neu.chatApp.client.data;
 
-import dispatcher.ClientDispatcher;
+import com.neu.chatApp.client.dispatcher.ClientDispatcher;
 import io.netty.channel.Channel;
-import liveNodeList.ClientLiveNodeList;
-import liveNodeList.LiveNodeList;
-import node.Node;
-import node.NodeChannel;
-import p2pConnectionGroup.P2PConnectionGroup;
+import com.neu.chatApp.model.liveNodeList.ClientLiveNodeList;
+import com.neu.chatApp.model.liveNodeList.LiveNodeList;
+import com.neu.chatApp.model.node.Node;
+import com.neu.chatApp.model.node.NodeChannel;
+import com.neu.chatApp.p2pConnectionGroup.P2PConnectionGroup;
 
 public class ClientData {
     public static Channel server;

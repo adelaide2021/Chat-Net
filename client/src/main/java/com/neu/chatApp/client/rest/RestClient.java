@@ -1,10 +1,14 @@
 package com.neu.chatApp.client.rest;
 
-import com.neu.chatApp.client.data.ClientData;
+import com.neu.chatApp.logger.SimpleLogger;
 
-import logger.SimpleLogger;
-import okhttp3.*;
 import java.io.IOException;
+
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class RestClient {
 
