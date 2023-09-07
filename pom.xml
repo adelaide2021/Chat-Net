@@ -8,7 +8,7 @@
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>common</module>
-        <module>server</module>
+        <module>centralServer</module>
         <module>client</module>
     </modules>
     <packaging>pom</packaging>
@@ -28,6 +28,7 @@
 
 
     <dependencies>
+
 
         <dependency>
             <groupId>io.netty</groupId>

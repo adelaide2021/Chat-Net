@@ -1,6 +1,6 @@
 package com.neu.chatApp.client;
 
-import com.neu.chatApp.client.rest.RestClient;
+import com.neu.chatApp.client.http.RestClient;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

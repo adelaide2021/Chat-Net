@@ -4,17 +4,19 @@ import io.netty.channel.Channel;
 import lombok.Data;
 import lombok.ToString;
 
-
+/*
+使用netty，给node弄一个channel
+ */
 @Data
 @ToString
 public class NodeChannel extends Node {
 
-    // the io channel of the user
+    // the io channel of the node
     private Channel channel;
 
     // get information of the channel of the node
     public NodeChannel(Node node, Channel channel) {
-        super(node.getUserId(), node.getUserName(), node.isLeader(), node.getHostname(), node.getPort());
+        super(node.getNodeId(), node.getNodeName(), node.isLeader(), node.getHostname(), node.getPort());
         this.channel = channel;
     }
 
