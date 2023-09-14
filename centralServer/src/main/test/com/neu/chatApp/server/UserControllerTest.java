@@ -1,7 +1,7 @@
-package com.neu.chatApp.server;
+package com.neu.chatApp.centralServer;
 
 import com.neu.chatApp.entity.Message;
-import com.neu.chatApp.server.controller.UserController;
+import com.neu.chatApp.centralServer.controller.UserController;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;

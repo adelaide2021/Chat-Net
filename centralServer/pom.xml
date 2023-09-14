@@ -91,6 +91,12 @@
             <version>3.19.2</version> <!-- Use the appropriate version -->
         </dependency>
 
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.26</version>
+        </dependency>
+
 
     </dependencies>
 
@@ -106,7 +112,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>com.neu.chatApp.server.ServerApplication</mainClass>
+                    <mainClass>com.neu.chatApp.centralServer.ServerApplication</mainClass>
                     <layout>ZIP</layout>
                 </configuration>
                 <executions>

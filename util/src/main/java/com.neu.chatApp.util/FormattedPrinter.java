@@ -1,6 +1,5 @@
 package com.neu.chatApp.util;
 
-
 /**
  * Print message in format.
  */
@@ -20,7 +19,12 @@ public class FormattedPrinter {
       // filled the rest spots with "="
       int restSpots = 100 - length;
       int half = restSpots / 2;
-      result = "=".repeat(half) + wrappedTitle + "=".repeat(restSpots - half);
+      // = "=".repeat(half) + wrappedTitle + "=".repeat(restSpots - half);
+      String equals = "";
+      for (int i = 0; i < half; i++) {
+        equals += "=";
+      }
+      result = equals + wrappedTitle + equals;
     } else {
       result = wrappedTitle;
     }
@@ -31,14 +35,23 @@ public class FormattedPrinter {
    * Print the end of the title.
    */
   public static void printEnd() {
-    System.out.println("=".repeat(100));
+//    System.out.println("=".repeat(100));
+    for (int i = 0; i < 100; i++) {
+      System.out.print("=");
+    }
+    System.out.println();
   }
 
   /**
    * Print the line breaker.
    */
   public static void printLineBreaker() {
-    System.out.println("-".repeat(100));
+
+//    System.out.println("-".repeat(100));
+    for (int i = 0; i < 100; i++) {
+      System.out.print("-");
+    }
+    System.out.println();
   }
 
   /**
