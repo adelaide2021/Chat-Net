@@ -3,9 +3,9 @@ package com.neu.chatApp.gui;
 
 import com.neu.chatApp.client.peerToPeer.data.ClientData;
 
-public class Driver {
+public class ClientDriver {
 
-    public Driver(String hostname, int port) {
+    public ClientDriver(String hostname, int port) {
         ClientData.init(hostname, port);
         new Thread(new CmdLineUI()).start();
     }

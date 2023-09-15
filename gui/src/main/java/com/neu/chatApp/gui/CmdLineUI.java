@@ -196,7 +196,7 @@ public class CmdLineUI implements Runnable {
                 log.info("The node has become the leader node");
                 ClientData.myNode.setLeader(true);
                 try {
-                    // if the current node is the leader, create a channel for the leader node and initiate leader election in the P2P network to inform all nodes about the new leader.
+                    // if the current node is the leader, create a channel for the leader node and initiate leader election in the P2P network to inform all nodes about the new leader
                     ClientData.serverChannel = ClientData.p2PInitializer.connect(hostname, port);
                     LeaderElectionMessage leaderElectionMessage = new LeaderElectionMessage(MessageType.LEADER_ELECTION, LeaderElectionMessageType.CLIENT_REPORT, ClientData.myNode);
                     ClientData.serverChannel.writeAndFlush(leaderElectionMessage);
@@ -209,7 +209,7 @@ public class CmdLineUI implements Runnable {
                     onExit();
                 }
             } else {
-                // if not the leader node, connect to the leader node and invoke the join and leave APIs.
+                // if not the leader node invoke the join and leave handler and connect to the leader node
                 JoinAndLeaveHandler.join(hostname, port);
                 while (!isJoined) {
                     FormattedPrinter.printSystemMessage("Joining the p2p network ...");
@@ -359,7 +359,7 @@ public class CmdLineUI implements Runnable {
     public void onExit() {
         try {
             if (ClientData.myNode != null && ClientData.myNode.isLeader()) {
-                // start a leave transaction
+                // if it is the leader node, initiate a leave transaction and leader election
                 JoinAndLeaveHandler.leave();
                 while (!isLeft) {
                     FormattedPrinter.printSystemMessage("System is exiting ...");
@@ -370,8 +370,7 @@ public class CmdLineUI implements Runnable {
                 ClientData.serverChannel.writeAndFlush(new LeaderElectionMessage(MessageType.LEADER_ELECTION, LeaderElectionMessageType.TOKEN_RETURN, ClientData.myNode, ClientData.leaderNodeToken));
             } else {
                 if (ClientData.myNode != null) {
-                    // none leader node reports to the leader node to exit
-                    // if the user logged in otherwise just exit
+                    // non-leader nodes report to the leader for logout
                     JoinAndLeaveHandler.leave();
                 }
             }

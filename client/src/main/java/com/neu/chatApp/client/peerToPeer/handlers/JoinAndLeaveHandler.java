@@ -41,7 +41,7 @@ public class JoinAndLeaveHandler implements Handler<JoinAndLeaveMessage> {
 
   /**
    * Use for a new none leader node to join the network
-   * */
+   */
   public static void join(String leaderHostname, int leaderPort) throws SocketTimeoutException {
     JoinAndLeaveMessage joinMessage = new JoinAndLeaveMessage(MessageType.JOIN_AND_LEAVE, JoinAndLeaveMessageType.JOIN, ClientData.myNode);
     Channel connect = ClientData.p2PInitializer.connect(leaderHostname, leaderPort);
@@ -123,14 +123,14 @@ public class JoinAndLeaveHandler implements Handler<JoinAndLeaveMessage> {
       case GREETING:
         if (ClientData.clientLiveNodes.size() == 0) {
           log.info("Joined to the p2p network");
-//          UI.isJoined = true;
+          // UI.isJoined = true;
         }
         // store the node to local live node list
         ClientData.clientLiveNodes.add(new NodeChannel(joinAndLeaveMessage.getNodeInfo(), ctx.channel()));
         break;
       case LEAVE_OK:
         log.info("Received LEAVE_OK, system exited");
-//        UI.isLeft = true;
+        // UI.isLeft = true;
         break;
     }
   }

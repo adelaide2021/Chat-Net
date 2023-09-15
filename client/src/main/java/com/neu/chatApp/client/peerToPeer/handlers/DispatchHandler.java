@@ -111,7 +111,7 @@ public class DispatchHandler extends SimpleChannelInboundHandler<Message> {
                 log.info("Detected a node crash id: " + node.getNodeId() + ", name: " + node.getNodeName());
                 if (ClientData.myNode.isLeader()) {
                     // report to server if my node is leader
-                    new ClientAPI(ClientData.baseURL).logout(Long.valueOf(node.getNodeName()));
+                    new ClientAPI().logout(Long.valueOf(node.getNodeName()));
                     //new ClientAPI().postForEntity("http://" + ClientData.serverHostname + ":" + SharableResource.serverHTTPPort + "/user/logout", .getId(), Void.class);
                     log.info("Reported to server");
                 }

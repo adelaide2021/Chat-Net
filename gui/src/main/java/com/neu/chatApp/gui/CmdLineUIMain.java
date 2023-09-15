@@ -72,6 +72,6 @@ public class CmdLineUIMain implements CommandLineRunner {
             log.error("Please try to use another port to start the application");
             System.exit(1);
         }
-        new Driver(hostName, port);
+        new ClientDriver(hostName, port);
     }
 }
