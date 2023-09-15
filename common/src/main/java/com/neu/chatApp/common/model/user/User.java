@@ -8,7 +8,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-// server端数据库中存储的数据就是user
+/**
+ * The data stored in the server-side database represents user information.
+ */
 @Getter
 @Setter
 @NoArgsConstructor

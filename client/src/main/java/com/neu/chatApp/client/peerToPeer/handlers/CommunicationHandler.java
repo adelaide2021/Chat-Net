@@ -1,7 +1,7 @@
-package com.neu.chatApp.centralServer.client.peerToPeer.handlers;
+package com.neu.chatApp.client.peerToPeer.handlers;
 
 import com.neu.chatApp.common.model.message.communicationMessage.CommunicationMessage;
-import com.neu.chatApp.centralServer.client.peerToPeer.data.ClientData;
+import com.neu.chatApp.client.peerToPeer.data.ClientData;
 import com.neu.chatApp.common.interfaces.Handler;
 import com.neu.chatApp.util.FormattedPrinter;
 import io.netty.channel.ChannelHandlerContext;

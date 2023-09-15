@@ -1,7 +1,7 @@
 package com.neu.chatApp.gui;
 
 
-import com.neu.chatApp.centralServer.client.peerToPeer.data.ClientData;
+import com.neu.chatApp.client.peerToPeer.data.ClientData;
 
 public class Driver {
 

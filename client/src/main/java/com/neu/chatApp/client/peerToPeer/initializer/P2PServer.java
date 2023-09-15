@@ -1,4 +1,4 @@
-package com.neu.chatApp.centralServer.client.peerToPeer.initializer;
+package com.neu.chatApp.client.peerToPeer.initializer;
 
 import com.neu.chatApp.common.model.message.Message;
 import io.netty.bootstrap.ServerBootstrap;
@@ -35,12 +35,12 @@ public class P2PServer {
    *
    */
   public void run() {
-    // create parent and child threads
-    EventLoopGroup parent = new NioEventLoopGroup();
-    EventLoopGroup child = new NioEventLoopGroup();
+    // create boss and worker threads
+    EventLoopGroup boss = new NioEventLoopGroup();
+    EventLoopGroup worker = new NioEventLoopGroup();
     try {
       ServerBootstrap bootstrap = new ServerBootstrap();
-      bootstrap.group(parent, child)
+      bootstrap.group(boss, worker)
               // nio to accept connection
               .channel(NioServerSocketChannel.class)
               // the maximum queue length for incoming connection
@@ -68,8 +68,8 @@ public class P2PServer {
       log.error(e.getMessage());
     } finally {
       // on exit, release system resource
-      parent.shutdownGracefully();
-      child.shutdownGracefully();
+      boss.shutdownGracefully();
+      worker.shutdownGracefully();
     }
   }
 }

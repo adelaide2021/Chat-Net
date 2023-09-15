@@ -1,11 +1,11 @@
-package com.neu.chatApp.centralServer.client.peerToPeer.handlers;
+package com.neu.chatApp.client.peerToPeer.handlers;
 
-import com.neu.chatApp.centralServer.client.peerToPeer.services.Transaction;
-import com.neu.chatApp.centralServer.client.peerToPeer.services.TransactionImpl;
+import com.neu.chatApp.client.peerToPeer.services.Transaction;
+import com.neu.chatApp.client.peerToPeer.services.TransactionImpl;
 import com.neu.chatApp.common.model.message.joinAndLeaveMessage.JoinAndLeaveMessage;
 import com.neu.chatApp.common.model.message.joinAndLeaveMessage.JoinAndLeaveMessageType;
 import com.neu.chatApp.common.interfaces.Handler;
-import com.neu.chatApp.centralServer.client.peerToPeer.data.ClientData;
+import com.neu.chatApp.client.peerToPeer.data.ClientData;
 
 import com.neu.chatApp.common.model.message.MessageType;
 import com.neu.chatApp.common.model.node.NodeChannel;
@@ -27,7 +27,7 @@ public class JoinAndLeaveHandler implements Handler<JoinAndLeaveMessage> {
 
   private static final Transaction TRANSACTION = new TransactionImpl();
 
-  // 理论上下面两个可以用Kafka代替这个队列，但这个队列是用在本机上也存储在本机上的，Kafka是用在分布式系统中的
+  // （理论上下面两个可以用Kafka代替这个队列，但这个队列是用在本机上也存储在本机上的，Kafka是用在分布式系统中的）
   private static final Queue<JoinAndLeaveMessage> queue = new LinkedBlockingQueue<>();
 
   private static final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
@@ -40,8 +40,7 @@ public class JoinAndLeaveHandler implements Handler<JoinAndLeaveMessage> {
 
 
   /**
-   * Use for a new node none leader node to join the network. Called in login method.
-   * join and leave这两个方法都是连接的leader node，transaction是连接的所有live node吗？？？
+   * Use for a new none leader node to join the network
    * */
   public static void join(String leaderHostname, int leaderPort) throws SocketTimeoutException {
     JoinAndLeaveMessage joinMessage = new JoinAndLeaveMessage(MessageType.JOIN_AND_LEAVE, JoinAndLeaveMessageType.JOIN, ClientData.myNode);
@@ -64,18 +63,15 @@ public class JoinAndLeaveHandler implements Handler<JoinAndLeaveMessage> {
       leaderNode.getChannel().writeAndFlush(leave);
       return;
     }
-    // if the node is leader
-    // start transaction if list is not empty
+    // if the node is leader, start transaction if list is not empty
     if (ClientData.clientLiveNodes.size() > 0) {
       queue.add(new JoinAndLeaveMessage(MessageType.JOIN_AND_LEAVE, JoinAndLeaveMessageType.LEAVE, ClientData.myNode));
     } else {
-      // else just exit
-//      UI.isLeft = true;
+       // else just exit
+       // CmdLineUI.isLeft = true;
     }
   }
 
-  // 怎么会有只用join and leave但没用transaction的呢？？？
-  // transaction里面不就实现了join and leave吗？？？
   public void handle(JoinAndLeaveMessage joinAndLeaveMessage, ChannelHandlerContext ctx) {
     // only leader node should take care of join and leave events of a node
     switch (joinAndLeaveMessage.getSubType()) {
@@ -89,7 +85,6 @@ public class JoinAndLeaveHandler implements Handler<JoinAndLeaveMessage> {
             }
           } else {
             // if no nodes in the list, no transaction need
-            // 处理这是第一个node的情况，自动成为leader？？？
             try {
               Channel connect = ClientData.p2PInitializer.connect(joinAndLeaveMessage.getNodeInfo().getHostname(), joinAndLeaveMessage.getNodeInfo().getPort());
               ClientData.clientLiveNodes.add(new NodeChannel(joinAndLeaveMessage.getNodeInfo(), connect));
@@ -145,10 +140,10 @@ public class JoinAndLeaveHandler implements Handler<JoinAndLeaveMessage> {
     log.info("Transaction completed");
   }
 
-
-  // prepare就是在这里发送的！！！
-  // join and leave message就是先加入队列再在scheduler中取出
-  // 这样就确保在两阶段协议执行的lock期间不会处理新的message！！！
+  /**
+   * Join and leave messages are queued and processed in the scheduler,
+   * preventing interference with the two-phase protocol's lock period.
+   */
   private void scheduler() {
     executorService.scheduleAtFixedRate(() -> {
       while (!queue.isEmpty() && !lock) {

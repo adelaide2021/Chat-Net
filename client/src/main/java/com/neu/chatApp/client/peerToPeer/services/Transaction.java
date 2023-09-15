@@ -1,4 +1,4 @@
-package com.neu.chatApp.centralServer.client.peerToPeer.services;
+package com.neu.chatApp.client.peerToPeer.services;
 
 import com.neu.chatApp.common.model.message.joinAndLeaveMessage.JoinAndLeaveMessageType;
 import com.neu.chatApp.common.model.node.Node;

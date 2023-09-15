@@ -35,7 +35,6 @@ public class ServerLiveNodes<T extends Node> implements LiveNodes<T>, Iterable<T
         if (id == null) {
             return false;
         }
-        // query the node
         T t = get(id);
         if (t == null) {
             return false;
@@ -82,8 +81,6 @@ public class ServerLiveNodes<T extends Node> implements LiveNodes<T>, Iterable<T
 
     /**
      * Get the first none leader node in the list.
-     *
-     * @return a node. If the list only contains the leader node, this method will return null.
      */
     public T getNext() {
         if (nodes.size() == 0) {

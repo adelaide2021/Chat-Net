@@ -1,4 +1,4 @@
-package com.neu.chatApp.centralServer.client.peerToPeer.initializer;
+package com.neu.chatApp.client.peerToPeer.initializer;
 
 import lombok.extern.slf4j.Slf4j;
 import com.neu.chatApp.common.model.message.Message;

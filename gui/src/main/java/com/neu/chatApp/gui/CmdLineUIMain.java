@@ -1,7 +1,7 @@
 package com.neu.chatApp.gui;
 
 
-import com.neu.chatApp.centralServer.client.peerToPeer.data.ClientData;
+import com.neu.chatApp.client.peerToPeer.data.ClientData;
 import com.neu.chatApp.util.PreConnectionTest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
@@ -18,12 +18,12 @@ import java.net.UnknownHostException;
 @Slf4j
 public class CmdLineUIMain implements CommandLineRunner {
 
-    // client p2p port
+    // server information on the client side
     private static int port;
 
+    // leader node server information
     private static String serverHostname;
 
-    // 这个server http port是啥，是怎么知道的
     private static int serverHTTPPort;
 
     private static int serverNettyPort;
@@ -33,7 +33,6 @@ public class CmdLineUIMain implements CommandLineRunner {
         if (args.length == 4) {
             try {
                 port = Integer.parseInt(args[0]);
-
                 serverHostname = args[1];
                 serverHTTPPort = Integer.parseInt(args[2]);
                 serverNettyPort = Integer.parseInt(args[3]);

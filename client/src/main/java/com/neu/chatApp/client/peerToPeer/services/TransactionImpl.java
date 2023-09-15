@@ -1,7 +1,7 @@
-package com.neu.chatApp.centralServer.client.peerToPeer.services;
+package com.neu.chatApp.client.peerToPeer.services;
 
+import com.neu.chatApp.client.peerToPeer.data.ClientData;
 import com.neu.chatApp.common.model.message.joinAndLeaveMessage.JoinAndLeaveMessageType;
-import com.neu.chatApp.centralServer.client.peerToPeer.data.ClientData;
 import com.neu.chatApp.common.model.message.Message;
 import com.neu.chatApp.common.model.message.MessageType;
 import com.neu.chatApp.common.model.message.transactionMessage.TransactionMessage;

@@ -10,8 +10,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-/*
-1、这个令牌生成的方法从哪学的，是和密码学有关的吗，要看一下这部分？？？
+/**
+ *
  */
 public class TokenGenerator {
     // none expired time

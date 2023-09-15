@@ -1,12 +1,12 @@
-package com.neu.chatApp.centralServer.client.peerToPeer.handlers;
+package com.neu.chatApp.client.peerToPeer.handlers;
 
 import com.neu.chatApp.common.model.message.communicationMessage.CommunicationMessage;
 import com.neu.chatApp.common.model.message.joinAndLeaveMessage.JoinAndLeaveMessage;
 import com.neu.chatApp.common.model.message.leaderElectionMessage.LeaderElectionMessage;
 import com.neu.chatApp.common.model.message.transactionMessage.TransactionMessage;
 import com.neu.chatApp.common.interfaces.Handler;
-import com.neu.chatApp.centralServer.client.peerToPeer.data.ClientData;
-import com.neu.chatApp.centralServer.client.http.ClientAPI;
+import com.neu.chatApp.client.peerToPeer.data.ClientData;
+import com.neu.chatApp.client.http.ClientAPI;
 
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;

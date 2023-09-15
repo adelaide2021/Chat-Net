@@ -1,4 +1,4 @@
-package com.neu.chatApp.centralServer.client.peerToPeer.data;
+package com.neu.chatApp.client.peerToPeer.data;
 
 import com.neu.chatApp.common.interfaces.LiveNodes;
 import io.netty.channel.Channel;

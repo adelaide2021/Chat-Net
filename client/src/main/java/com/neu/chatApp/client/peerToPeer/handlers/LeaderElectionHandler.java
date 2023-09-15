@@ -1,8 +1,8 @@
-package com.neu.chatApp.centralServer.client.peerToPeer.handlers;
+package com.neu.chatApp.client.peerToPeer.handlers;
 
 import com.neu.chatApp.common.model.message.leaderElectionMessage.LeaderElectionMessage;
 import com.neu.chatApp.common.interfaces.Handler;
-import com.neu.chatApp.centralServer.client.peerToPeer.data.ClientData;
+import com.neu.chatApp.client.peerToPeer.data.ClientData;
 import com.neu.chatApp.common.model.message.MessageType;
 import com.neu.chatApp.common.model.message.leaderElectionMessage.LeaderElectionMessageType;
 import com.neu.chatApp.common.model.node.Node;
@@ -18,9 +18,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-/*
-node reposts collector在干啥？？
- */
+
 @Slf4j
 public class LeaderElectionHandler implements Handler<LeaderElectionMessage> {
   private final Map<Node, Integer> nodeReportsCollector;
@@ -29,14 +27,14 @@ public class LeaderElectionHandler implements Handler<LeaderElectionMessage> {
 
   public LeaderElectionHandler() {
     this.nodeReportsCollector = new HashMap<>();
-    // an asynchronously thread will handle the next, if the collect from all nodes
+    // an asynchronous thread will handle the next step once data collection from all nodes is complete.
     this.performanceAnalyzer();
   }
 
   @Override
   public void handle(LeaderElectionMessage msg, ChannelHandlerContext ctx) {
     switch (msg.getSubType()) {
-      // server request是如果是加进来的第一个节点自动成为leader，如果不是的话即为某个node crash的选主，调用LEADER REQUEST
+      // SERVER_AUTH temporarily designates the current node as the leader and initiates leader election coordination
       case SERVER_REQUEST:
         try {
           Thread.sleep(2000);
@@ -44,17 +42,17 @@ public class LeaderElectionHandler implements Handler<LeaderElectionMessage> {
         }
         // start leader election and report the metadata of the leader node
         ClientData.serverChannel = ctx.channel();
-        LeaderElectionMessage centralServerRequest = new LeaderElectionMessage(MessageType.LEADER_ELECTION, LeaderElectionMessageType.LEADER_REQUEST);
-        log.info("Received LEADER_ELECTION request from centralServer: " + centralServerRequest);
+        LeaderElectionMessage leaderRequest = new LeaderElectionMessage(MessageType.LEADER_ELECTION, LeaderElectionMessageType.LEADER_REQUEST);
+        log.info("Received LEADER_ELECTION request from centralServer: " + leaderRequest);
         // if empty list send self
         if (ClientData.clientLiveNodes.size() == 0) {
           ClientData.serverChannel.writeAndFlush(new LeaderElectionMessage(MessageType.LEADER_ELECTION, LeaderElectionMessageType.CLIENT_REPORT, ClientData.myNode));
           ClientData.serverChannel = null;
           return;
         }
-        startLeaderElection(centralServerRequest);
+        startLeaderElection(leaderRequest);
         break;
-      // SERVER AUTH意味着我自己这个node成为了leader
+      // SERVER_AUTH designates this node as the leader
       case SERVER_AUTH:
         log.info("Received " + msg.getSubType() + " from centralServer, this node has become the leader node");
         String leaderToken = msg.getLeaderToken();
@@ -72,7 +70,7 @@ public class LeaderElectionHandler implements Handler<LeaderElectionMessage> {
           }
         }
         break;
-      // LEADER REQUEST是收到leader说要选主，所以向每个node发送node  report的消息，下一步node收到node report就会报告自己的performance
+      // LEADER_REQUEST from the leader triggers nodes to report their performance
       case LEADER_REQUEST:
         // send request to all nodes
         log.info("Received " + msg.getSubType() + " from leader node");
@@ -81,14 +79,14 @@ public class LeaderElectionHandler implements Handler<LeaderElectionMessage> {
         LeaderElectionMessage report = new LeaderElectionMessage(MessageType.LEADER_ELECTION, LeaderElectionMessageType.NODE_REPORT, ClientData.myNode, performance);
         ctx.channel().writeAndFlush(report);
         break;
-      // NODE REPORT用于node报告本节点的performance存储在nodeReportsCollector中
+      // NODE_REPORT for reporting node performance, stored in nodeReportsCollector
       case NODE_REPORT:
         // collect nodes response
         log.info("Received " + msg.getSubType() + " from" + msg.getNodeInfo() + " with performance points " + msg.getPerformanceWeight());
         // collect nodes report
         nodeReportsCollector.put(msg.getNodeInfo(), msg.getPerformanceWeight());
         break;
-      // LEADER CHOSEN用于在每个client对应的live nodes中set确定好的leader node
+      // LEADER_CHOSEN sets the client's chosen leader among live nodes.
       case LEADER_CHOSEN:
         log.info("A leader reported: " + msg.getNodeInfo());
         NodeChannel nodeChannel = ClientData.clientLiveNodes.get(msg.getNodeInfo().getNodeId());
@@ -96,12 +94,11 @@ public class LeaderElectionHandler implements Handler<LeaderElectionMessage> {
         break;
     }
   }
+  
   /**
    * Only call to send LEADER_REQUEST to start the leader election.
    *
    * @param request the request from centralServer or leader
-   * 但上个handle的 server request就是调用，难道不会形成无限循环？？？
-   * 因为调用start leader election后又回到handle的SERVER_REQUEST中了啊？？？
    */
   private void startLeaderElection(LeaderElectionMessage request) {
     Iterator<NodeChannel> allNodes = ClientData.clientLiveNodes.getAllNodes();
@@ -120,7 +117,6 @@ public class LeaderElectionHandler implements Handler<LeaderElectionMessage> {
         // analyze which node has the lowest performance point
         Map.Entry<Node, Integer> theBestNode = getTheBestNode();
         // send the new leader node information to the centralServer
-        // 唯一的问题是send的server到底是哪个，是central server还是leader node的server还是client对应的netty server？？？
         LeaderElectionMessage leader = new LeaderElectionMessage(MessageType.LEADER_ELECTION, LeaderElectionMessageType.CLIENT_REPORT, theBestNode.getKey());
         ClientData.serverChannel.writeAndFlush(leader);
         // centralServer will close the channel

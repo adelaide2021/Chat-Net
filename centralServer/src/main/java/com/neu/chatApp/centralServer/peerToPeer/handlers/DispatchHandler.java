@@ -1,11 +1,10 @@
 package com.neu.chatApp.centralServer.peerToPeer.handlers;
 
+import com.neu.chatApp.centralServer.peerToPeer.data.ServerData;
 import com.neu.chatApp.common.model.message.Message;
 import com.neu.chatApp.common.model.message.MessageType;
 import com.neu.chatApp.common.model.message.joinAndLeaveMessage.JoinAndLeaveMessage;
 import com.neu.chatApp.common.model.message.leaderElectionMessage.LeaderElectionMessage;
-import com.neu.chatApp.centralServer.peerToPeer.data.ServerData;
-import com.neu.chatApp.common.interfaces.Handler;
 import com.neu.chatApp.common.model.message.leaderElectionMessage.LeaderElectionMessageType;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
@@ -22,7 +21,7 @@ import java.io.IOException;
 @Slf4j
 public class DispatchHandler extends SimpleChannelInboundHandler<Message> {
     private final LeaderElectionHandler leaderElectionHandler;
-    private final Handler<JoinAndLeaveMessage> joinAndLeaveHandler;
+    private final JoinAndLeaveHandler joinAndLeaveHandler;
 
     public DispatchHandler() {
         this.leaderElectionHandler = new LeaderElectionHandler();
@@ -57,23 +56,15 @@ public class DispatchHandler extends SimpleChannelInboundHandler<Message> {
      */
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        // leader node may crash
         if (ServerData.leaderNode != null && ctx.channel().equals(ServerData.leaderNode.getChannel())) {
             OkHttpClient client = new OkHttpClient();
-
-            // Build the request URL
             String url = "http://localhost:" + ServerData.myHttpPort + "/user/logout";
-
-            // Create a JSON request body (assuming ServerData.leaderNode.getId() is a JSON value)
             MediaType JSON = MediaType.parse("application/json; charset=utf-8");
             RequestBody requestBody = RequestBody.create(JSON, ServerData.leaderNode.getNodeId().toString());
-
-            // Build the HTTP request
             Request request = new Request.Builder()
                     .url(url)
                     .post(requestBody)
                     .build();
-
             try (Response response = client.newCall(request).execute()) {
                 if (!response.isSuccessful()) {
                     log.error("Failed to send HTTP request: " + response.code() + " " + response.message());
@@ -85,10 +76,10 @@ public class DispatchHandler extends SimpleChannelInboundHandler<Message> {
             }
 
             log.error("The last leader node logged out triggered by the system");
-            ServerData.liveNodes.remove(ServerData.leaderNode.getNodeId());
+            ServerData.serverLiveNodes.remove(ServerData.leaderNode.getNodeId());
 
             log.warn("Leader node lost the connection with the server, a new round leader election will start");
-            if (ServerData.liveNodes.size() != 0) {
+            if (ServerData.serverLiveNodes.size() != 0) {
                 Channel channel = leaderElectionHandler.connectToNext();
                 // Start a new round leader election
                 LeaderElectionMessage leaderElectionRequest = new LeaderElectionMessage(MessageType.LEADER_ELECTION, LeaderElectionMessageType.SERVER_REQUEST);

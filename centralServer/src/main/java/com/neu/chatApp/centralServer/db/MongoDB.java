@@ -102,11 +102,11 @@ public class MongoDB implements DB {
         }
     }
 
-    public static void main(String[] args) {
-        MongoDB db = new MongoDB();
-        db.select("test");
-        User user = new User("test", "1234");
-        db.insertUser(user);
-        System.out.println(db.select("test"));
-    }
+//    public static void main(String[] args) {
+//        MongoDB db = new MongoDB();
+//        db.select("test");
+//        User user = new User("test", "1234");
+//        db.insertUser(user);
+//        System.out.println(db.select("test"));
+//    }
 }

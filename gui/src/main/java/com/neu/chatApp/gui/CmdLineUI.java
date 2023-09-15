@@ -3,11 +3,11 @@ package com.neu.chatApp.gui;
 import com.neu.chatApp.common.model.message.communicationMessage.CommunicationMessage;
 import com.neu.chatApp.common.model.message.communicationMessage.CommunicationMessageType;
 import com.neu.chatApp.common.model.message.leaderElectionMessage.LeaderElectionMessage;
-import com.neu.chatApp.centralServer.client.http.ClientAPI;
-import com.neu.chatApp.centralServer.client.peerToPeer.data.ClientData;
-import com.neu.chatApp.centralServer.client.peerToPeer.handlers.JoinAndLeaveHandler;
-import com.neu.chatApp.centralServer.client.peerToPeer.services.Communication;
-import com.neu.chatApp.centralServer.client.peerToPeer.services.CommunicationImpl;
+import com.neu.chatApp.client.http.ClientAPI;
+import com.neu.chatApp.client.peerToPeer.data.ClientData;
+import com.neu.chatApp.client.peerToPeer.handlers.JoinAndLeaveHandler;
+import com.neu.chatApp.client.peerToPeer.services.Communication;
+import com.neu.chatApp.client.peerToPeer.services.CommunicationImpl;
 import com.neu.chatApp.common.model.message.MessageType;
 import com.neu.chatApp.common.model.message.leaderElectionMessage.LeaderElectionMessageType;
 import com.neu.chatApp.common.model.node.Node;
@@ -27,20 +27,18 @@ import java.util.Map;
 
 /**
  * UI for user to interact. Should be located in a different thread.
- * Use system out print to distinguish the output with system log.
  */
 @Slf4j
 public class CmdLineUI implements Runnable {
-    // 负责用户登陆注册
+
+    // responsible for user login and registration
     private final ClientAPI clientAPI;
 
-    // 负责单点或者组播通信
+    // responsible for point-to-point or multicast communication
     private final Communication communication;
 
-    //
     private final UIHelper uiHelper;
 
-    // 负责接收用户输入
     private final BufferedReader bufferedReader;
 
     public static boolean isJoined;
@@ -49,8 +47,7 @@ public class CmdLineUI implements Runnable {
 
 
     public CmdLineUI() {
-        // 需要传入base URL
-        this.clientAPI = new ClientAPI("http...");
+        this.clientAPI = new ClientAPI();
         this.communication = new CommunicationImpl();
         this.bufferedReader = new BufferedReader(new InputStreamReader(System.in));
         this.uiHelper = new UIHelper();
@@ -177,32 +174,29 @@ public class CmdLineUI implements Runnable {
         // get password
         String password = getRightInput(1, "password");
         FormattedPrinter.printLineBreaker();
-        // 1、不是这个ClientData类中的hostname和port初始值是从哪里来的？？？
-        // hostname
+        // get hostname
         String myHostname = ClientData.myHostname;
-        // port
+        // get port
         int myPort = ClientData.myPort;
         try {
             // call login
             Map<String, Object> login = clientAPI.login(username, password, myHostname, myPort);
+
             // parse the response of login
-            //  传回的是leader node的hostname和port
+            // returns the hostname and port of the leader node
             Long id = Long.valueOf((Integer)login.get("id"));
             String hostname = (String) login.get("hostname");
             int port = (int) login.get("port");
             FormattedPrinter.printSystemMessage("Welcome back " + username);
-            // construct my node info
-            // 4、既然client data中的hostname和port与node是相同的，为什么还要重复设置这个值？？？
+
+            // construct my node info and check if the node is the leader node
             ClientData.myNode = new Node(id, username, false, ClientData.myHostname, ClientData.myPort);
             FormattedPrinter.printSystemMessage("Connecting to the p2p network ...");
-            // check if the node is the leader node
-            // 所以不是 central server的
             if (hostname.equals(ClientData.serverHostname) && port == ClientData.httpServerPort) {
                 log.info("The node has become the leader node");
                 ClientData.myNode.setLeader(true);
                 try {
-                    // 如果是当前node是leader node，那么新建这个leader node的channel，并在p2p中进行选主让p2p中的所有节点知道leader
-                    // 2、所以只有leader node才有channel？不应该是这样啊，应该是每个node的server都有channel才对
+                    // if the current node is the leader, create a channel for the leader node and initiate leader election in the P2P network to inform all nodes about the new leader.
                     ClientData.serverChannel = ClientData.p2PInitializer.connect(hostname, port);
                     LeaderElectionMessage leaderElectionMessage = new LeaderElectionMessage(MessageType.LEADER_ELECTION, LeaderElectionMessageType.CLIENT_REPORT, ClientData.myNode);
                     ClientData.serverChannel.writeAndFlush(leaderElectionMessage);
@@ -215,9 +209,7 @@ public class CmdLineUI implements Runnable {
                     onExit();
                 }
             } else {
-                // 如果不是leader node
-                // connect to the leader node and call join and leave api
-                // 此hostname就是leader的hostname，调用这一方法就是与leader node建立通信信道
+                // if not the leader node, connect to the leader node and invoke the join and leave APIs.
                 JoinAndLeaveHandler.join(hostname, port);
                 while (!isJoined) {
                     FormattedPrinter.printSystemMessage("Joining the p2p network ...");

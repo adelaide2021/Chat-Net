@@ -75,27 +75,26 @@ public class UserService {
             return ResponseEntity.badRequest().body(response);
         }
         // check if the user has already login somewhere
-        // abort the request
         if (user.isOnline()) {
             response.put("error", "Your account has logged in at somewhere");
             return ResponseEntity.badRequest().body(response);
         }
 
-        // record the ip and port of this time login
-        // db
+        // record the hostname and port used during this login in the database
         UserRepository.updateHostnameAndPort(id, hostname, port);
         UserRepository.updateLogin(user.getId(), true);
 
-        // return the leader hostname and port of the p to p network
-        // and the id the user
+        // return the id and the username of the user
         response.put("id", id);
         response.put("username", user.getUsername());
+
+        // return the leader hostname and port of the p to p network
         // if empty list, then the node will be assigned as leader
         if (ServerData.serverLiveNodes.size() == 0) {
             // given the server hostname and port
             try {
                 response.put("hostname", InetAddress.getLocalHost().getHostAddress());
-                response.put("port", ServerData.myPort);
+                response.put("port", ServerData.mySocketPort);
             } catch (UnknownHostException ignored) {}
         } else {
             // return the leader hostname and port

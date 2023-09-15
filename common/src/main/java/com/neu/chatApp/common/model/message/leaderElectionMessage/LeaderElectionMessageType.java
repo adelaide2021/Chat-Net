@@ -4,39 +4,38 @@ package com.neu.chatApp.common.model.message.leaderElectionMessage;
 public enum LeaderElectionMessageType {
 
 
-    // 服务器->客户端
-    //用于当leader消失或崩溃，服务器请求一个节点启动leader选举过程
-    //carry type + subtype
+    // Server to Client
+    // Used when the leader disappears or crashes, the server requests a node to start the leader election process.
+    // Contains: type + subtype
     SERVER_REQUEST,
 
-    // carry type + subtype + leaderToken
-    // server -> client
-    // 如果一个节点是第一个加入p2p网络的节点，服务器授权该节点为leader
+    // Server to Client
+    // If a node is the first to join the p2p network, the server authorizes that node as the leader.
+    // Contains: type + subtype + leaderToken
     SERVER_AUTH,
 
-    // client -> client
-    // //当前“leader”节点请求启动leader选举进程
-    // carry type + subtype
+    // Client(Leader) to Client
+    // The current "leader" node requests the start of the leader election process.
+    // Contains: type + subtype
     LEADER_REQUEST,
 
-    // client -> client
-    // 节点向发起选举的节点报告自己的状态
-    // carry type + subtype + nodeInfo + performanceWeight
+    // Client to Client
+    // Nodes report their status to the initiating node during leader election.
+    // Contains: type + subtype + nodeInfo + performanceWeight
     NODE_REPORT,
 
-    // client -> server
-    // leader node离开p2p group 并返回leader token
-    // carry type + subtype + nodeInfo + leaderToken
+    // Client(Leader) to Server
+    // Leader node leaves the p2p group and returns the leader token.
+    // Contains: type + subtype + nodeInfo + leaderToken
     TOKEN_RETURN,
 
-    // client -> server
-    // the node 报告 leader 选举的结果
-    // carry type + subtype + nodeInfo
+    // Client(Leader) to Server
+    // The node reports the result of the leader election to the leader.
+    // Contains: type + subtype + nodeInfo
     CLIENT_REPORT,
 
-    // client leader -> client
-    // Leader宣布the node为Leader
-    // carry type + subtype + nodeInfo
+    // Client(Leader) to Client
+    // Leader declares the node as the new Leader.
+    // Contains: type + subtype + nodeInfo
     LEADER_CHOSEN
-
 }
