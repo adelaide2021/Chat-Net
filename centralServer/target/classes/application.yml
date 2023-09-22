@@ -1,0 +1,42 @@
+# server:
+#   port: 8080
+#
+# spring:
+#   application:
+#     name: user
+#   datasource:
+#     username: postgres
+#     password: postgres123
+#     url: jdbc:postgresql://postgres-1.cehuxmoshf3z.us-west-2.rds.amazonaws.com:5432/postgres-1
+#     hikari:
+#       max-lifetime: 600000
+#     dbcp2:
+#       test-while-idle: true
+#       test-on-borrow: true
+#
+#   jpa:
+#     hibernate:
+#       ddl-auto: update
+#     show-sql: true
+#     properties:
+#       hibernate:
+#         dialect: org.hibernate.dialect.PostgreSQLDialect
+#         format_sql: true
+
+server:
+  port: 8080
+
+spring:
+  application:
+    name: user
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: qazwsx
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true # 如果需要在日志中看到 SQL 查询，可以设置为 true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
