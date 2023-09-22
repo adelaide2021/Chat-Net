@@ -8,7 +8,7 @@
 //import com.neu.chatApp.centralServer.db.DB;
 //import com.neu.chatApp.centralServer.db.MongoDB;
 //import com.neu.chatApp.common.model.request.Request;
-//import com.neu.chatApp.common.model.user.User;
+//import com.neu.chatApp.centralServer.db.User;
 //import com.neu.chatApp.util.SimpleLogger;
 //
 //public class RMIServerImpl extends UnicastRemoteObject implements RMIServer {

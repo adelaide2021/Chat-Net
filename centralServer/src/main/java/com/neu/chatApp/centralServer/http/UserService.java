@@ -2,7 +2,7 @@ package com.neu.chatApp.centralServer.http;
 
 import com.neu.chatApp.centralServer.peerToPeer.data.ServerData;
 import com.neu.chatApp.common.model.node.Node;
-import com.neu.chatApp.common.model.user.User;
+import com.neu.chatApp.centralServer.db.User;
 import com.neu.chatApp.util.Encryption;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

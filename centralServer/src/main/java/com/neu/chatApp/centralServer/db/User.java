@@ -1,12 +1,11 @@
-package com.neu.chatApp.common.model.user;
+package com.neu.chatApp.centralServer.db;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 /**
  * The data stored in the server-side database represents user information.
@@ -14,6 +13,9 @@ import javax.persistence.Id;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@Entity
+@Table(name = "user_info")
 public class User {
 
   @Id

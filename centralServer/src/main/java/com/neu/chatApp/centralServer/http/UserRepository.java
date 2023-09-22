@@ -1,11 +1,14 @@
 package com.neu.chatApp.centralServer.http;
 
+import com.neu.chatApp.centralServer.db.User;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
-public interface UserRepository extends CrudRepository{
+@Repository
+public interface UserRepository extends CrudRepository<User, Long>{
     @Query(value = "SELECT id FROM user_info WHERE usernane = :username", nativeQuery = true)
     Long getUserByName(@Param("username") String email);
 

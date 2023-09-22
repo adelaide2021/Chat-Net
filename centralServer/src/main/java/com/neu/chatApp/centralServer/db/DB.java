@@ -1,6 +1,5 @@
 package com.neu.chatApp.centralServer.db;
 
-import com.neu.chatApp.common.model.user.User;
 import com.neu.chatApp.common.model.request.Request;
 
 import java.util.List;

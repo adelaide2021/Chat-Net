@@ -16,13 +16,15 @@ import java.net.InetAddress;
  *
  */
 @SpringBootApplication
-@EntityScan(basePackages = "com.neu.chatApp.common.model.user")
+//@EntityScan(basePackages = "com.neu.chatApp.common.model.user")
+@EntityScan(basePackages = "com.neu.chatApp.centralServer.db")
+
 @Slf4j
 public class CentralServerDriver implements CommandLineRunner {
 
     private static int socketPort;
 
-    @Value("${server.socketPort}")
+    @Value("${server.port}")
     private int httpPort;
 
     public static void main(String[] args) {
